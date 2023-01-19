@@ -7,7 +7,6 @@ import (
 var messages []*Message
 
 type Message struct {
-	SenderID string `json:"sender_id"`
 	Username string `json:"username"`
 	Message  string `json:"message"`
 }

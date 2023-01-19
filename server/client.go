@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"math/rand"
-	"time"
 
 	"golang.org/x/net/websocket"
 )
@@ -12,15 +10,14 @@ import (
 var clients []*Client
 
 type Client struct {
-	id       string
-	ip       string
 	username string
 	ws       *websocket.Conn
 }
 
 // StartListening method listens for messages from client.
 func (client *Client) StartListening() {
-	log.Println(client)
+	log.Println("New User starts listening")
+	
 	buffer := make([]byte, 1024)
 
 	for {
@@ -32,7 +29,6 @@ func (client *Client) StartListening() {
 
 			// Create Message
 			exitMessage := Message{
-				SenderID: "System",
 				Username: "System",
 				Message:  fmt.Sprintf("%s has left the chat", client.username),
 			}
@@ -40,15 +36,15 @@ func (client *Client) StartListening() {
 			// Send Message
 			exitMessage.Post()
 			break
-		} else {
-			HandleInputMessage(client, buffer[:n])
 		}
+
+		HandleInputMessage(client, buffer[:n])
 	}
 }
 
 // ReleaseConnection function remove client from clients slice and ensure connection is closed.
 func ReleaseConnection(client *Client) {
-	log.Println("Release Connection:", client.username, client.id)
+	log.Println("Release Connection:", client.username)
 
 	// Remove from clients slice.
 	index := -1
@@ -65,17 +61,4 @@ func ReleaseConnection(client *Client) {
 
 	log.Println("Connection active:", len(clients))
 	client.ws.Close()
-}
-
-// GenerateUserId function generates a random 10 character id
-func GenerateUserId() string {
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP0123456789")
-	rand.Seed(time.Now().UnixNano())
-
-	b := make([]rune, 10)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-
-	return string(b)
 }
