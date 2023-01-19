@@ -1,11 +1,18 @@
 <script lang="ts">
   import Login from './components/Login.svelte'
-  import Header from './components/Header.svelte'
+  import Chat from './components/Chat.svelte'
+
+  let user = '1'
 </script>
 
 <main class="h-screen bg-zinc-900 text-white">
-  <div class="h-screen max-w-xs mx-auto px-4 flex flex-col justify-center">
-    <Header />
-    <Login />
+  <div
+    class="h-screen max-w-sm mx-auto px-4 flex flex-col justify-center mb:border-4 mb:border-zinc-700 mb:rounded-2xl"
+  >
+    {#if !user}
+      <Login />
+    {:else}
+      <Chat />
+    {/if}
   </div>
 </main>
