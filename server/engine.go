@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 )
 
 type InputMessage struct {
@@ -18,25 +17,18 @@ func HandleInputMessage(from *Client, data []byte) {
 	var input InputMessage
 	json.Unmarshal(data, &input)
 
-	log.Printf("New %v from: %v -> %v", input.Action, from.username, input.Message)
-
 	// Based on the action, handle it.
 	switch input.Action {
-	case "post_message":
+	case "message":
 		newMessage := Message{
 			Username: from.username,
 			Message:  input.Message,
 		}
 
 		newMessage.Post()
-
-	case "initial_connection":
+	case "connect":
 		// Set client username.
 		from.username = input.Username
-
-		// Send chat history to the new user.
-		chatHistory, _ := json.Marshal(messages)
-		from.ws.Write(chatHistory)
 
 		// Send to everyone that a user has joined to the chat.
 		newMessageToRoom := Message{

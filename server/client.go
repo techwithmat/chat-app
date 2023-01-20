@@ -16,8 +16,8 @@ type Client struct {
 
 // StartListening method listens for messages from client.
 func (client *Client) StartListening() {
-	log.Println("New User starts listening")
-	
+	log.Println("New user connected to the chat")
+
 	buffer := make([]byte, 1024)
 
 	for {
@@ -27,13 +27,12 @@ func (client *Client) StartListening() {
 		if err != nil {
 			ReleaseConnection(client)
 
-			// Create Message
+			// Create and send an exit message
 			exitMessage := Message{
 				Username: "System",
 				Message:  fmt.Sprintf("%s has left the chat", client.username),
 			}
 
-			// Send Message
 			exitMessage.Post()
 			break
 		}
@@ -47,16 +46,11 @@ func ReleaseConnection(client *Client) {
 	log.Println("Release Connection:", client.username)
 
 	// Remove from clients slice.
-	index := -1
 	for idx, value := range clients {
 		if client == value {
-			index = idx
+			clients = append(clients[:idx], clients[idx+1:]...)
 			break
 		}
-	}
-
-	if index >= 0 {
-		clients = append(clients[:index], clients[index+1:]...)
 	}
 
 	log.Println("Connection active:", len(clients))

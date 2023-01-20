@@ -4,17 +4,14 @@ import (
 	"encoding/json"
 )
 
-var messages []*Message
-
 type Message struct {
 	Username string `json:"username"`
 	Message  string `json:"message"`
 }
 
-// Post method broadcast message to all clients and add to message slice.
+// Post method broadcast message to all clients.
 func (m *Message) Post() {
 	m.Broadcast()
-	messages = append(messages, m)
 }
 
 // Broadcast method sends message to all clients in client slice.
