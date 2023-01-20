@@ -1,8 +1,15 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte'
+  import { username } from './stores'
   import Login from './components/Login.svelte'
   import Chat from './components/Chat.svelte'
 
-  let user = '1'
+  let user: string
+  const unsubscribe = username.subscribe(value => {
+    user = value
+  })
+
+  onDestroy(unsubscribe)
 </script>
 
 <main class="h-screen bg-zinc-900 text-white">
