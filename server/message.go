@@ -17,7 +17,9 @@ func (m *Message) Post() {
 // Broadcast method sends message to all clients in client slice.
 func (m *Message) Broadcast() {
 	for _, client := range clients {
-		m.BroadcastTo(client)
+		go func(c *Client) {
+			m.BroadcastTo(c)
+		}(client)
 	}
 }
 
